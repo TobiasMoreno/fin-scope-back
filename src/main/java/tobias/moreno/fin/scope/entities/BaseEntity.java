@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 
 import java.time.LocalDateTime;
 
+
 public class BaseEntity {
 
 	@Column(name = "created_at")

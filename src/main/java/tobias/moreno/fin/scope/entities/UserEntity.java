@@ -2,36 +2,51 @@ package tobias.moreno.fin.scope.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.Set;
+import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserEntity extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String username;
-
-	@Column(unique = true)
+	@Column(nullable = false, unique = true)
 	private String email;
 
-	@Column(nullable = false)
 	private String password;
 
-	@OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
-	private Set<AlertEntity> alertEntities;
+	@Column(name = "is_enabled")
+	private boolean isEnabled;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> roles;
+	@Column(name = "is_account_not_expired")
+	private Boolean isAccountNotExpired;
 
+	@Column(name = "is_account_not_locked")
+	private Boolean isAccountNotLocked;
+
+	@Column(name = "is_credential_not_expired")
+	private Boolean isCredentialNotExpired;
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "users_roles",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id")
+	)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private List<RoleEntity> roles;
 }
