@@ -2,16 +2,20 @@ package tobias.moreno.fin.scope.configs;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 
+@Configuration
+@RequiredArgsConstructor
 public class FirebaseConfig {
 
 	@Bean
 	public GoogleCredentials firebaseCredentials() throws IOException {
-		ClassPathResource resource = new ClassPathResource("serviceAccountKey.json");
+		ClassPathResource resource = new ClassPathResource("service-account-key.json");
 		return GoogleCredentials.fromStream(resource.getInputStream());
 	}
 

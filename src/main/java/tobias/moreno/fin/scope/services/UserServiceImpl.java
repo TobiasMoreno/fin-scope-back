@@ -40,7 +40,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-	private static final String API_KEY = "AIzaSyDCNiCZ5oOFW6akmLvX4RdWcdwv5wQLWHQ";
+	private static final String API_KEY = "AIzaSyAfM3gWN47bO-xmPJG-L36aPjO3KZUlgv8";
 	private static final String FIREBASE_AUTH_URL_WITH_PASSWORD = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + API_KEY;
 	private static final String FIREBASE_AUTH_URL_WITH_PROVIDER = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=" + API_KEY;
 	private final UserRepository userRepository;
@@ -84,7 +84,6 @@ public class UserServiceImpl implements UserService {
 		}
 
 		String idToken = (String) response.get("idToken");
-
 
 		firebaseAuthService.verifyToken(idToken);
 

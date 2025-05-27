@@ -1,28 +1,26 @@
 package tobias.moreno.fin.scope.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import tobias.moreno.fin.scope.dto.ResponseKlineDataDto;
 import tobias.moreno.fin.scope.dto.ResponseTickerDto;
+import tobias.moreno.fin.scope.entities.UserEntity;
 import tobias.moreno.fin.scope.services.interfaces.IBinanceService;
+import tobias.moreno.fin.scope.services.interfaces.UserService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BinanceService implements IBinanceService {
-	private static final String BINANCE_API_KEY = "Secret key";
 	private static final String BINANCE_API_URL = "https://api.binance.com/api/v3";
 
 	private final RestTemplate restTemplate;
-
-	public BinanceService(RestTemplate restTemplate) {
-		this.restTemplate = restTemplate;
-	}
 
 	public String getSymbol(String symbol) {
 		return restTemplate.getForObject(BINANCE_API_URL + "/ticker/price?symbol=" + symbol.toUpperCase(), String.class);

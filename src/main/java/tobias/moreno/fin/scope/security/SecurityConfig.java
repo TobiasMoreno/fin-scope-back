@@ -31,9 +31,7 @@ public class SecurityConfig {
 								"/api/v3/api-docs.yaml",
 								"/api/v3/api-docs/swagger-config").permitAll()
 						.requestMatchers(new RegexRequestMatcher(".*/auth/.*", null)).permitAll()
-						.requestMatchers(new RegexRequestMatcher(".*/(auth|public)/.*", null)).permitAll()
-//                 .requestMatchers(new RegexRequestMatcher("./dev/.", null)).hasRole("DEVELOPER")
-//                 .requestMatchers(new RegexRequestMatcher("./admin/.", null)).hasAnyRole("ADMIN", "DEVELOPER")
+						.requestMatchers(new RegexRequestMatcher(".*/(auth|public|values)/.*", null)).permitAll()
 						.anyRequest().authenticated())
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)
