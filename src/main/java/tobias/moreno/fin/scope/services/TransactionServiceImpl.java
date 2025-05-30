@@ -10,6 +10,7 @@ import tobias.moreno.fin.scope.models.AssetType;
 import tobias.moreno.fin.scope.repositories.TransactionRepository;
 import tobias.moreno.fin.scope.services.interfaces.TransactionService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -45,5 +46,12 @@ public class TransactionServiceImpl extends BaseServiceImpl<
 				.stream()
 				.map(entity -> modelMapper.map(entity, ResponseTransactionDTO.class))
 				.toList();
+	}
+
+	@Override
+	public BigDecimal calculateCurrentBalance() {
+		return repository.calculateCurrentBalance() != null
+				? repository.calculateCurrentBalance()
+				: BigDecimal.ZERO;
 	}
 }
