@@ -1,5 +1,6 @@
 package tobias.moreno.fin.scope.controllers;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,21 +14,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import tobias.moreno.fin.scope.dto.transactions.RequestTransactionDTO;
 import tobias.moreno.fin.scope.dto.transactions.ResponseTransactionDTO;
-import tobias.moreno.fin.scope.entities.TransactionEntity;
 import tobias.moreno.fin.scope.models.AssetType;
-import tobias.moreno.fin.scope.services.TransactionServiceImpl;
 import tobias.moreno.fin.scope.services.interfaces.TransactionService;
 
-import java.net.URI;
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @RequestMapping("transactions")
 @RestController
 @RequiredArgsConstructor
 public class TransactionController {
 
-	private final TransactionServiceImpl transactionService;
+	private final TransactionService transactionService;
 
 	@GetMapping()
 	public ResponseEntity<List<ResponseTransactionDTO>> getAll() {
@@ -37,11 +35,15 @@ public class TransactionController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<ResponseTransactionDTO> getById(@PathVariable Long id) {
-		return transactionService.findById(id)
-				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+		ResponseTransactionDTO dto = transactionService.findById(id)
+				.orElseThrow(() -> new EntityNotFoundException("Transaction with ID " + id + " not found"));
+		return ResponseEntity.ok(dto);
 	}
 
+	@GetMapping("current-balance")
+	public ResponseEntity<BigDecimal> getCurrentBalance() {
+		return ResponseEntity.ok(transactionService.calculateCurrentBalance());
+	}
 
 	@PostMapping
 	public ResponseEntity<ResponseTransactionDTO> create(@RequestBody RequestTransactionDTO tx) {
