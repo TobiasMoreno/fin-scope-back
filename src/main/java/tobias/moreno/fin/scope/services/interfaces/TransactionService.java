@@ -14,5 +14,5 @@ public interface TransactionService extends BaseService<RequestTransactionDTO, R
 
 	List<ResponseTransactionDTO> findAllByAssetType(AssetType assetType);
 	BigDecimal calculateCurrentBalance();
-	PortfolioCompositionDTO getPortfolioComposition();
+	List<PortfolioCompositionDTO> getPortfolioComposition();
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tobias.moreno.fin.scope.dto.transactions.PortfolioCompositionDTO;
 import tobias.moreno.fin.scope.dto.transactions.RequestTransactionDTO;
 import tobias.moreno.fin.scope.dto.transactions.ResponseTransactionDTO;
 import tobias.moreno.fin.scope.models.AssetType;
@@ -69,6 +70,11 @@ public class TransactionController {
 	public ResponseEntity<List<ResponseTransactionDTO>> findAllByAssetType(@RequestParam AssetType assetType) {
 		List<ResponseTransactionDTO> txs = transactionService.findAllByAssetType(assetType);
 		return ResponseEntity.ok(txs);
+	}
+
+	@GetMapping("portfolio-composition")
+	public ResponseEntity<List<PortfolioCompositionDTO>> getPortfolioComposition() {
+		return ResponseEntity.ok(transactionService.getPortfolioComposition());
 	}
 
 }
