@@ -29,37 +29,6 @@ public class UserController {
     private final UserService userService;
 
     @Operation(
-            summary = "Registro de usuario por email",
-            description = "Registra un usuario con email y contraseña mediante Firebase Authentication.",
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "Usuario registrado exitosamente"),
-                    @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-            }
-    )
-    @PostMapping("/email-register")
-    public ResponseEntity<?> emailRegister(@RequestBody @Valid EmailLoginRequestDTO userRequest) throws FirebaseAuthException {
-        userService.emailRegister(userRequest);
-        return ResponseEntity.status(201).build();
-    }
-
-    @Operation(
-            summary = "Inicio de sesión con email",
-            description = "Inicia sesión con email y contraseña y devuelve un token JWT.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso",
-                            content = @Content(schema = @Schema(implementation = LoginResponseDTO.class))),
-                    @ApiResponse(responseCode = "401", description = "Credenciales incorrectas", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-            }
-    )
-    @PostMapping("/email-login")
-    public ResponseEntity<LoginResponseDTO> emailLogin(@RequestBody @Valid EmailLoginRequestDTO loginRequest) throws FirebaseAuthException {
-        LoginResponseDTO response = userService.emailLogin(loginRequest);
-        return ResponseEntity.status(200).body(response);
-    }
-
-    @Operation(
             summary = "Inicio de sesión con Google",
             description = "Autentica a un usuario con Google OAuth y devuelve un token JWT.",
             responses = {
@@ -74,32 +43,5 @@ public class UserController {
         LoginResponseDTO response = userService.googleLogin(googleToken);
         return ResponseEntity.status(200).body(response);
     }
-
-    @Operation(
-            summary = "Cambio de contraseña",
-            description = "Permite a un usuario cambiar su contraseña mediante su correo electrónico.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Contraseña cambiada exitosamente"),
-                    @ApiResponse(responseCode = "400", description = "Solicitud inválida", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
-            }
-    )
-    @PostMapping("/change-password")
-    public ResponseEntity<?> emailChangePassword (@RequestBody @Valid EmailChangePasswordRequestDTO emailChangePasswordRequestDTO) throws FirebaseAuthException {
-        userService.changePassword(emailChangePasswordRequestDTO);
-        return ResponseEntity.status(200).build();
-    }
-    @Operation(
-            summary = "Deshabilitar usuario",
-            description = "Solo El usuario propietario puede desabilitar su cuenta, debe estar logueado",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Usuario deshabilitado exitosamente"),
-                    @ApiResponse(responseCode = "403", description = "El usuario logueado es distinto al que esta intentando deshabilitar", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content)
-            }
-    )
-    @PatchMapping("/user-disable/{id}")
-    public ResponseEntity<?> disableUser(@PathVariable Long id){
-        return ResponseEntity.status(200).body(userService.disableUser(id));
-    }
+   
 }

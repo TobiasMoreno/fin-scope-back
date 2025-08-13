@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  # Aplicación Spring Boot
+  app:
+    build: .
+    container_name: finscope-app
+    restart: unless-stopped
+    depends_on:
+      mysql_db:
+        condition: service_healthy
+    environment:
+      - SWAGGER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db:3306/fin_scope_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=fin_scope_user
+      - SPRING_DATASOURCE_PASSWORD=fin_scope_password
+    ports:
+      - "8080:8080"
+    networks:
+      - finscope-network
+
+  # Base de datos MySQL
+  mysql_db:
+    container_name: mysql_container
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: fin_scope_db
+      MYSQL_USER: fin_scope_user
+      MYSQL_PASSWORD: fin_scope_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - finscope-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "fin_scope_user", "-pfin_scope_password"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+
+volumes:
+  mysql_data:
+
+networks:
+  finscope-network:
+    driver: bridge

@@ -15,7 +15,4 @@ public class GoogleLoginRequestDTO {
     @Schema(description = "El token de acceso obtenido de Google para autenticar al usuario", example = "ya29.a0ARrdaM8d...")
     @NotBlank(message = "El accessToken es obligatorio")
     private String accessToken;
-    @Schema(description = "El role asignado al usuario", example = "RECRUITER")
-    @NotBlank(message = "Role is mandatory")
-    private String role;
 }

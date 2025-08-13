@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google OAuth Test</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+  </head>
+  <body>
+    <h1>Google OAuth Test</h1>
+    <div id="google-signin-button"></div>
+    <div id="result"></div>
+
+    <hr />
+    <h2>Modo de Desarrollo</h2>
+    <p>
+      Si tienes problemas con Google OAuth, usa este botón para probar el
+      backend:
+    </p>
+    <button
+      onclick="testWithDevelopmentToken()"
+      style="
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      "
+    >
+      Probar con Token de Desarrollo
+    </button>
+
+    <script>
+      function initializeGoogleSignIn() {
+        google.accounts.id.initialize({
+          client_id:
+            "830906165893-c7i1u8o134ej796cgoihpm9secct665m.apps.googleusercontent.com",
+          callback: handleCredentialResponse,
+          auto_select: false,
+          cancel_on_tap_outside: true,
+          ux_mode: "popup",
+          prompt: "select_account",
+        });
+
+        google.accounts.id.renderButton(
+          document.getElementById("google-signin-button"),
+          { theme: "outline", size: "large" }
+        );
+      }
+
+      function handleCredentialResponse(response) {
+        console.log("ID Token:", response.credential);
+
+        // Mostrar el token en la página
+        document.getElementById("result").innerHTML = `
+                <h3>ID Token obtenido:</h3>
+                <textarea rows="10" cols="80">${response.credential}</textarea>
+                <br><br>
+                <button onclick="testBackend()">Probar Backend</button>
+            `;
+
+        // Guardar el token para usar en el botón de prueba
+        window.idToken = response.credential;
+      }
+
+      function testBackend() {
+        if (!window.idToken) {
+          alert(
+            "Primero obtén un ID token haciendo clic en 'Sign in with Google'"
+          );
+          return;
+        }
+
+        fetch("http://localhost:8080/auth/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idToken: window.idToken,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("result").innerHTML += `
+                    <h3>Respuesta del Backend:</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+          })
+          .catch((error) => {
+            document.getElementById("result").innerHTML += `
+                    <h3>Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+          });
+      }
+
+      function testWithDevelopmentToken() {
+        fetch("http://localhost:8080/auth/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idToken: "test-token-development",
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("result").innerHTML = `
+                    <h3>Respuesta del Backend (Modo Desarrollo):</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                    <br>
+                    <p><strong>JWT Token:</strong> ${data.token}</p>
+                    <p><strong>Usuario:</strong> ${data.nombre} (${
+              data.email
+            })</p>
+                `;
+          })
+          .catch((error) => {
+            document.getElementById("result").innerHTML = `
+                    <h3>Error:</h3>
+                    <pre>${error.message}</pre>
+                `;
+          });
+      }
+
+      // Inicializar cuando se carga la página
+      window.onload = initializeGoogleSignIn;
+    </script>
+  </body>
+</html>

@@ -1,59 +1,63 @@
 package tobias.moreno.fin.scope.dto.auth;
 
-
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import tobias.moreno.fin.scope.entities.UserEntity;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@Builder
-@RequiredArgsConstructor
 @Getter
 public class CustomUserDetails implements UserDetails {
 
-    private final UserEntity userEntity;
+    private final UserEntity user;
+
+    public CustomUserDetails(UserEntity user) {
+        this.user = user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userEntity.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_"+role.getName().toUpperCase()))
+        if (user.getRoles() == null) {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+        
+        return user.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()))
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public String getPassword() {
-        return userEntity.getPassword();
-    }
+    	@Override
+	public String getPassword() {
+		// Since we're using OAuth, we don't have passwords
+		return null;
+	}
 
     @Override
     public String getUsername() {
-        return userEntity.getEmail();
+        return user.getEmail();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return userEntity.getIsAccountNotExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return userEntity.getIsAccountNotLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return userEntity.getIsCredentialNotExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return userEntity.isEnabled();
+        return true;
     }
 }
-

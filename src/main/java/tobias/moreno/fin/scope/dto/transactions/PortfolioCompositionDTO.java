@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 public class PortfolioCompositionDTO {
-	private String assetName;
+	private String assetName; //Todo sacar el assetName q corresponde a la key del map
 	private BigDecimal totalValue;
 	private BigDecimal percentage;
 }

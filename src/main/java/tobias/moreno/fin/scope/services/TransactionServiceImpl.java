@@ -66,6 +66,7 @@ public class TransactionServiceImpl extends BaseServiceImpl<
 		List<TransactionEntity> allTransactions = repository.findAll();
 		List<PortfolioCompositionDTO> portfolioCompositionDTOs = new ArrayList<>();
 
+		Map<String,PortfolioCompositionDTO> portfolioCompositionDTOMap = new HashMap<>();
 		Map<String, BigDecimal> values = new HashMap<>();
 
 		for (TransactionEntity transaction : allTransactions) {
@@ -80,7 +81,7 @@ public class TransactionServiceImpl extends BaseServiceImpl<
 		}
 
 		BigDecimal totalPortfolioValue = calculateCurrentBalance();
-
+		//TODO por que no devolver el map?
 		for (Map.Entry<String, BigDecimal> entry : values.entrySet()) {
 			String assetName = entry.getKey();
 			BigDecimal totalValue = entry.getValue();

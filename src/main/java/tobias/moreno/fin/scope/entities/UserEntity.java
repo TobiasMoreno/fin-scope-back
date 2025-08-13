@@ -2,7 +2,6 @@ package tobias.moreno.fin.scope.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,24 +18,20 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false, of = "email")
+@lombok.experimental.SuperBuilder
 public class UserEntity extends BaseEntity {
 
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	private String password;
+	@Column(name = "name")
+	private String name;
 
-	@Column(name = "is_enabled")
-	private boolean isEnabled;
+	@Column(name = "picture")
+	private String picture;
 
-	@Column(name = "is_account_not_expired")
-	private Boolean isAccountNotExpired;
-
-	@Column(name = "is_account_not_locked")
-	private Boolean isAccountNotLocked;
-
-	@Column(name = "is_credential_not_expired")
-	private Boolean isCredentialNotExpired;
+	@Column(name = "provider")
+	private String provider = "google";
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
