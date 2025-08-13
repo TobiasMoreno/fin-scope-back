@@ -5,9 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import tobias.moreno.fin.scope.dto.ResponseKlineDataDto;
 import tobias.moreno.fin.scope.dto.ResponseTickerDto;
-import tobias.moreno.fin.scope.entities.UserEntity;
 import tobias.moreno.fin.scope.services.interfaces.IBinanceService;
-import tobias.moreno.fin.scope.services.interfaces.UserService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

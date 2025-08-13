@@ -1,6 +1,5 @@
 package tobias.moreno.fin.scope.services.interfaces;
 
-import com.google.firebase.auth.FirebaseAuthException;
 import tobias.moreno.fin.scope.dto.auth.GoogleLoginRequestDTO;
 import tobias.moreno.fin.scope.dto.auth.LoginResponseDTO;
 import tobias.moreno.fin.scope.entities.UserEntity;
