@@ -11,11 +11,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tobias.moreno.fin.scope.dto.auth.AuthResponse;
 import tobias.moreno.fin.scope.dto.auth.GoogleTokenRequest;
+import tobias.moreno.fin.scope.entities.RoleEntity;
 import tobias.moreno.fin.scope.entities.UserEntity;
+import tobias.moreno.fin.scope.repositories.auth.RoleRepository;
 import tobias.moreno.fin.scope.repositories.auth.UserRepository;
 import tobias.moreno.fin.scope.security.JwtUtil;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,6 +27,7 @@ import java.util.Optional;
 public class GoogleAuthServiceImpl implements GoogleAuthService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final JwtUtil jwtUtil;
 
     @Value("${google.client.id}")
@@ -75,12 +79,16 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
                 }
                 userRepository.save(user);
             } else {
-                // Create new user
+                // Create new user with DEFAULT role
+                RoleEntity defaultRole = roleRepository.findByName("DEFAULT")
+                        .orElseThrow(() -> new RuntimeException("Default role not found"));
+                
                 user = UserEntity.builder()
                         .email(email)
                         .name(name != null ? name : email)
                         .picture(picture)
                         .provider("google")
+                        .roles(List.of(defaultRole))
                         .build();
                 userRepository.save(user);
             }
@@ -108,12 +116,16 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
         if (existingUser.isPresent()) {
             user = existingUser.get();
         } else {
-            // Create test user
+            // Create test user with DEFAULT role
+            RoleEntity defaultRole = roleRepository.findByName("DEFAULT")
+                    .orElseThrow(() -> new RuntimeException("Default role not found"));
+            
             user = UserEntity.builder()
                     .email(testEmail)
                     .name(testName)
                     .picture(testPicture)
                     .provider("google")
+                    .roles(List.of(defaultRole))
                     .build();
             userRepository.save(user);
         }

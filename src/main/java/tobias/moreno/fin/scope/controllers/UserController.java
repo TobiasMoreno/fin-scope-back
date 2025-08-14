@@ -26,7 +26,7 @@ public class UserController {
 
     @Operation(
             summary = "Inicio de sesión con Google",
-            description = "Autentica a un usuario con Google OAuth y devuelve un token JWT.",
+            description = "Autentica a un usuario con Google OAuth y devuelve un token JWT. Este endpoint no requiere autenticación previa.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Autenticación exitosa",
                             content = @Content(schema = @Schema(implementation = LoginResponseDTO.class))),

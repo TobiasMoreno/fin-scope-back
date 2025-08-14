@@ -4,6 +4,9 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,14 +26,27 @@ public class SwaggerConfig {
 		contact.setName("Tobias Moreno");
 
 		Info info = new Info()
-				.title("Financial Management API")
+				.title("FinScope API")
 				.version("1.0")
 				.contact(contact)
-				.description("API para gestionar alertas financieras en tiempo real");
+				.description("API para gestión financiera con sistema de roles");
+
+		// Configuración de seguridad JWT
+		SecurityScheme securityScheme = new SecurityScheme()
+				.type(SecurityScheme.Type.HTTP)
+				.scheme("bearer")
+				.bearerFormat("JWT")
+				.description("Ingresa tu token JWT aquí");
+
+		// Aplicar seguridad globalmente
+		SecurityRequirement securityRequirement = new SecurityRequirement()
+				.addList("Bearer Authentication");
 
 		return new OpenAPI()
 				.info(info)
-				.servers(List.of(devServer));
+				.servers(List.of(devServer))
+				.components(new Components().addSecuritySchemes("Bearer Authentication", securityScheme))
+				.addSecurityItem(securityRequirement);
 	}
 
 }

@@ -25,9 +25,21 @@ public class CustomUserDetails implements UserDetails {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
         
-        return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()))
-                .collect(Collectors.toList());
+        List<SimpleGrantedAuthority> authorities = new java.util.ArrayList<>();
+        
+        // Agregar roles
+        user.getRoles().forEach(role -> {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName().toUpperCase()));
+            
+            // Agregar permisos del rol
+            if (role.getPermissions() != null) {
+                role.getPermissions().forEach(permission -> 
+                    authorities.add(new SimpleGrantedAuthority(permission.getDescription()))
+                );
+            }
+        });
+        
+        return authorities;
     }
 
     	@Override

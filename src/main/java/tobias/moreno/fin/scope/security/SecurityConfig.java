@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 
 @Configuration
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -24,13 +26,16 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 		http.
 				authorizeHttpRequests(request -> request
-						.requestMatchers("/api/swagger-ui/**",
-								"/api/swagger-ui.html",
-								"/api/v3/api-docs/**",
-								"/api/v3/api-docs.yaml",
-								"/api/v3/api-docs/swagger-config").permitAll()
+						// Swagger UI - permitir acceso sin autenticación
+						.requestMatchers("/swagger-ui/**",
+								"/swagger-ui.html/**",
+								"/v3/api-docs/**",
+								"/v3/api-docs.yaml",
+								"/v3/api-docs/swagger-config").permitAll()
+						// Endpoints de autenticación
 						.requestMatchers(new RegexRequestMatcher(".*/auth/.*", null)).permitAll()
 						.requestMatchers(new RegexRequestMatcher(".*/(auth|values)/.*", null)).permitAll()
+						// Cualquier otra petición requiere autenticación
 						.anyRequest().authenticated())
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(AbstractHttpConfigurer::disable)

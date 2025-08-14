@@ -1,33 +1,61 @@
-
+-- Permisos del sistema
 INSERT INTO permissions (id, description)
-VALUES (1, 'READ_PRIVILEGE'),
-       (2, 'WRITE_PRIVILEGE'),
-       (3, 'DELETE_PRIVILEGE');
+VALUES (1, 'READ_BASIC'),
+       (2, 'WRITE_BASIC'),
+       (3, 'DELETE_BASIC'),
+       (4, 'READ_ADVANCED'),
+       (5, 'WRITE_ADVANCED'),
+       (6, 'DELETE_ADVANCED'),
+       (7, 'ADMIN_ACCESS'),
+       (8, 'USER_MANAGEMENT'),
+       (9, 'SYSTEM_CONFIG');
 
+-- Roles del sistema
 INSERT INTO roles (id, name)
-VALUES (1, 'USER'),
-       (2, 'ADMIN');
+VALUES (1, 'DEFAULT'),
+       (2, 'PREMIUM'),
+       (3, 'ADMIN');
 
+-- Asignación de permisos a roles
+-- DEFAULT: Solo funcionalidades básicas
 INSERT INTO roles_permissions (role_id, permission_id)
-VALUES (1, 1),
-       (1, 2),
-       (2, 1),
-       (2, 2),
-       (2, 3);
+VALUES (1, 1),  -- READ_BASIC
+       (1, 2);  -- WRITE_BASIC
 
+-- PREMIUM: Funcionalidades básicas + avanzadas
+INSERT INTO roles_permissions (role_id, permission_id)
+VALUES (2, 1),  -- READ_BASIC
+       (2, 2),  -- WRITE_BASIC
+       (2, 3),  -- DELETE_BASIC
+       (2, 4),  -- READ_ADVANCED
+       (2, 5);  -- WRITE_ADVANCED
+
+-- ADMIN: Acceso total
+INSERT INTO roles_permissions (role_id, permission_id)
+VALUES (3, 1),  -- READ_BASIC
+       (3, 2),  -- WRITE_BASIC
+       (3, 3),  -- DELETE_BASIC
+       (3, 4),  -- READ_ADVANCED
+       (3, 5),  -- WRITE_ADVANCED
+       (3, 6),  -- DELETE_ADVANCED
+       (3, 7),  -- ADMIN_ACCESS
+       (3, 8),  -- USER_MANAGEMENT
+       (3, 9);  -- SYSTEM_CONFIG
+
+-- Usuario administrador
 INSERT INTO users (email,
                    name,
                    picture,
                    provider,
                    created_at,
                    updated_at)
-VALUES ('admin@example.com', 'Admin User', 'https://example.com/admin.jpg', 'google', NOW(), NOW()),
-       ('user@example.com', 'Regular User', 'https://example.com/user.jpg', 'google', NOW(), NOW());
+VALUES ('admin@finscope.com', 'Admin FinScope', 'https://example.com/admin.jpg', 'google', NOW(), NOW());
 
+-- Asignar rol ADMIN al usuario administrador
 INSERT INTO users_roles (user_id, role_id)
-VALUES (1, 2),
-       (2, 1);
+VALUES (1, 3);
 
+-- Datos de ejemplo para transacciones
 INSERT INTO transactions (asset_name,
                           asset_type,
                           tx_type,
