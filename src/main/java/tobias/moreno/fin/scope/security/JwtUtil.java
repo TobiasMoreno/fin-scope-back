@@ -5,10 +5,12 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import tobias.moreno.fin.scope.entities.RoleEntity;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -25,10 +27,11 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(String email, String name, String picture) {
+    public String generateToken(String email, String name, String picture, String role) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("nombre", name);
-        claims.put("foto", picture);
+        claims.put("role",role);
+        claims.put("name", name);
+        claims.put("picture", picture);
         
         return createToken(claims, email);
     }

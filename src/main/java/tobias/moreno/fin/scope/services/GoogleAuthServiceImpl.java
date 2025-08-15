@@ -94,7 +94,7 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
             }
 
             // Generate JWT token
-            String token = jwtUtil.generateToken(email, user.getName(), user.getPicture());
+            String token = jwtUtil.generateToken(email, user.getName(), user.getPicture(), user.getRoles().get(0).getName());
 
             return new AuthResponse(token, user.getName(), user.getEmail(), user.getPicture());
 
@@ -131,7 +131,7 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
         }
         
         // Generate JWT token
-        String token = jwtUtil.generateToken(testEmail, testName, testPicture);
+        String token = jwtUtil.generateToken(testEmail, testName, testPicture,user.getRoles().get(0).getName());
         
         return new AuthResponse(token, testName, testEmail, testPicture);
     }
