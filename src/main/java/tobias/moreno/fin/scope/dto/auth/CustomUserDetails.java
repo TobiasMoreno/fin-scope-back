@@ -8,7 +8,6 @@ import tobias.moreno.fin.scope.entities.UserEntity;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class CustomUserDetails implements UserDetails {

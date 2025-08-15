@@ -1,49 +1,131 @@
-version: '3'
+version: '3.8'
 
 services:
-  # Aplicación Spring Boot
+  # Aplicación Spring Boot - PRODUCCIÓN
   app:
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: finscope-app
     restart: unless-stopped
     depends_on:
       mysql_db:
         condition: service_healthy
+    env_file:
+      - env
     environment:
-      - SWAGGER_PORT=8081
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db:3306/fin_scope_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      # Configuración de la aplicación
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8081
+      
+      # Configuración de base de datos
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db:3306/fin_scope_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8
       - SPRING_DATASOURCE_USERNAME=fin_scope_user
-      - SPRING_DATASOURCE_PASSWORD=fin_scope_password
+      - SPRING_DATASOURCE_PASSWORD=fin_scope_password_secure
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      
+      # Configuración JPA/Hibernate - PRODUCCIÓN
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-only
+      - SPRING_JPA_SHOW_SQL=false
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+      
+      # Configuración de logging - PRODUCCIÓN
+      - LOGGING_LEVEL_ROOT=INFO
+      - LOGGING_LEVEL_tobias.moreno.fin.scope=INFO
+      
+      # Configuración de memoria JVM
+      - JAVA_OPTS=-Xms512m -Xmx1024m -XX:+UseG1GC -XX:+UseContainerSupport
     ports:
-      - "8080:8080"
+      - "8081:8081"
     networks:
       - finscope-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
+      timeout: 30s
+      retries: 3
+      interval: 30s
+      start_period: 60s
+    volumes:
+      - app_logs:/app/logs
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '0.5'
+        reservations:
+          memory: 512M
+          cpus: '0.25'
 
-  # Base de datos MySQL
+  # Base de datos MySQL - PRODUCCIÓN
   mysql_db:
-    container_name: mysql_container
+    container_name: finscope-mysql
     image: mysql:8.0
     restart: unless-stopped
     ports:
       - "3307:3306"
+    env_file:
+      - env
     environment:
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: root_password_secure
       MYSQL_DATABASE: fin_scope_db
       MYSQL_USER: fin_scope_user
-      MYSQL_PASSWORD: fin_scope_password
+      MYSQL_PASSWORD: fin_scope_password_secure
+      MYSQL_CHARACTER_SET_SERVER: utf8mb4
+      MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+      - ./mysql/conf:/etc/mysql/conf.d
     networks:
       - finscope-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "fin_scope_user", "-pfin_scope_password"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "fin_scope_user", "-pfin_scope_password_secure"]
       timeout: 20s
       retries: 10
       interval: 10s
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Redis para cache - PRODUCCIÓN
+  redis:
+    container_name: finscope-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - finscope-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 3
+      interval: 30s
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.1'
 
 volumes:
   mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  app_logs:
+    driver: local
 
 networks:
   finscope-network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
