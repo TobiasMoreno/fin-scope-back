@@ -15,11 +15,11 @@ public class AuthResponse {
     private String token;
     
     @Schema(description = "User's name")
-    private String nombre;
+    private String name;
     
     @Schema(description = "User's email")
     private String email;
     
     @Schema(description = "User's profile picture URL")
-    private String foto;
+    private String picture;
 }
