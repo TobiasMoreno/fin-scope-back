@@ -43,7 +43,7 @@ class GoogleAuthServiceTest {
 
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
         when(userRepository.save(any(UserEntity.class))).thenReturn(newUser);
-        when(jwtUtil.generateToken("test@example.com", "Test User", "https://example.com/picture.jpg"))
+        when(jwtUtil.generateToken("test@example.com", "Test User", "https://example.com/picture.jpg", "DEFAULT"))
                 .thenReturn("jwt-token");
 
         // When
@@ -52,9 +52,9 @@ class GoogleAuthServiceTest {
         // Then
         assertNotNull(response);
         assertEquals("jwt-token", response.getToken());
-        assertEquals("Test User", response.getNombre());
+        assertEquals("Test User", response.getName());
         assertEquals("test@example.com", response.getEmail());
-        assertEquals("https://example.com/picture.jpg", response.getFoto());
+        assertEquals("https://example.com/picture.jpg", response.getPicture());
     }
 
     @Test
@@ -73,7 +73,7 @@ class GoogleAuthServiceTest {
 
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(existingUser));
         when(userRepository.save(any(UserEntity.class))).thenReturn(existingUser);
-        when(jwtUtil.generateToken("test@example.com", "Test User", "https://example.com/picture.jpg"))
+        when(jwtUtil.generateToken("test@example.com", "Test User", "https://example.com/picture.jpg", "DEFAULT"))
                 .thenReturn("jwt-token");
 
         // When
@@ -82,8 +82,8 @@ class GoogleAuthServiceTest {
         // Then
         assertNotNull(response);
         assertEquals("jwt-token", response.getToken());
-        assertEquals("Test User", response.getNombre());
+        assertEquals("Test User", response.getName());
         assertEquals("test@example.com", response.getEmail());
-        assertEquals("https://example.com/picture.jpg", response.getFoto());
+        assertEquals("https://example.com/picture.jpg", response.getPicture());
     }
 }

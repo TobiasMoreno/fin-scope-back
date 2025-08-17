@@ -6,13 +6,26 @@ import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tobias.moreno.fin.scope.entities.InvestmentEntity;
+import tobias.moreno.fin.scope.dto.investments.InvestmentDTO;
 
 @Configuration
 public class MappersConfig {
 
 	@Bean
 	public ModelMapper modelMapper() {
-		return new ModelMapper();
+		ModelMapper mapper = new ModelMapper();
+		mapper.getConfiguration()
+				.setAmbiguityIgnored(true)
+				.setSkipNullEnabled(true);
+		
+		// Configurar mapeo específico para InvestmentEntity -> InvestmentDTO
+		mapper.createTypeMap(InvestmentEntity.class, InvestmentDTO.class)
+				.addMappings(mapping -> {
+					mapping.map(InvestmentEntity::getUserId, InvestmentDTO::setUserId);
+				});
+		
+		return mapper;
 	}
 
 	@Bean("mergerMapper")

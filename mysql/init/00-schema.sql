@@ -63,3 +63,27 @@ CREATE TABLE IF NOT EXISTS tickers (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+-- Crear tabla de inversiones
+CREATE TABLE IF NOT EXISTS investments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    symbol VARCHAR(20) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    quantity DECIMAL(19,6) NOT NULL,
+    last_price DECIMAL(19,6) NOT NULL,
+    daily_variation_percent DECIMAL(8,4),
+    daily_variation_amount DECIMAL(19,6),
+    cost_per_share DECIMAL(19,6) NOT NULL,
+    gain_loss_percent DECIMAL(8,4),
+    gain_loss_amount DECIMAL(19,6),
+    total DECIMAL(19,6) NOT NULL,
+    type VARCHAR(20) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_user_id (user_id),
+    INDEX idx_symbol (symbol),
+    INDEX idx_type (type),
+    INDEX idx_user_type (user_id, type)
+);
