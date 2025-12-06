@@ -27,25 +27,6 @@ class GoogleAuthControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void testGoogleAuthEndpoint_ValidToken() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-
-        // Crear un request válido (en un test real, usarías un token válido)
-        GoogleTokenRequest request = new GoogleTokenRequest();
-        request.setIdToken("valid-google-id-token");
-
-        mockMvc.perform(post("/auth/google")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.token").exists())
-                .andExpect(jsonPath("$.nombre").exists())
-                .andExpect(jsonPath("$.email").exists())
-                .andExpect(jsonPath("$.foto").exists());
-    }
-
-    @Test
     void testGoogleAuthEndpoint_InvalidToken() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
 

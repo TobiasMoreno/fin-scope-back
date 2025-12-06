@@ -41,12 +41,8 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
                 return handleTestToken();
             }
             
-            // Verify Google ID token with basic scopes only
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
-                    .setAudience(Collections.singletonList(googleClientId))
-                    .build();
-
-            GoogleIdToken idToken = verifier.verify(request.getIdToken());
+            // Verify Google ID token
+            GoogleIdToken idToken = verifyGoogleToken(request.getIdToken());
             
             if (idToken == null) {
                 throw new RuntimeException("Invalid ID token");
@@ -134,5 +130,15 @@ public class GoogleAuthServiceImpl implements GoogleAuthService {
         String token = jwtUtil.generateToken(testEmail, testName, testPicture,user.getRoles().get(0).getName());
         
         return new AuthResponse(token, testName, testEmail, testPicture);
+    }
+    
+    /**
+     * Verifies a Google ID token. This method is protected to allow overriding in tests.
+     */
+    protected GoogleIdToken verifyGoogleToken(String idTokenString) throws Exception {
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+                .setAudience(Collections.singletonList(googleClientId))
+                .build();
+        return verifier.verify(idTokenString);
     }
 }
