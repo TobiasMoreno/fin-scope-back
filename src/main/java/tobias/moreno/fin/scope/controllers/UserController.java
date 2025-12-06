@@ -1,6 +1,5 @@
 package tobias.moreno.fin.scope.controllers;
 
-import com.google.firebase.auth.FirebaseAuthException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -35,7 +34,7 @@ public class UserController {
             }
     )
     @PostMapping("/google-login")
-    public ResponseEntity<LoginResponseDTO> googleLogin(@RequestBody @Valid GoogleLoginRequestDTO googleToken) throws FirebaseAuthException {
+    public ResponseEntity<LoginResponseDTO> googleLogin(@RequestBody @Valid GoogleLoginRequestDTO googleToken) {
         LoginResponseDTO response = userService.googleLogin(googleToken);
         return ResponseEntity.status(200).body(response);
     }
