@@ -13,23 +13,25 @@ Este documento explica cómo configurar GitHub Actions para el repositorio del b
 
 Necesitas configurar los siguientes secrets en tu repositorio de GitHub:
 
-### Pasos para agregar secrets:
+> 📖 **Guía detallada**: Ver [CONFIGURAR_SECRETS.md](./CONFIGURAR_SECRETS.md) para instrucciones paso a paso con capturas de pantalla.
 
-1. Ve a tu repositorio en GitHub
-2. Navega a **Settings** → **Secrets and variables** → **Actions**
-3. Haz clic en **New repository secret**
-4. Agrega los siguientes secrets:
+### Resumen rápido:
+
+1. Ve a tu repositorio en GitHub → **Settings** → **Secrets and variables** → **Actions**
+2. Haz clic en **New repository secret** y agrega:
 
 #### `DOCKER_USERNAME`
 - **Valor**: Tu nombre de usuario de Docker Hub
 - **Ejemplo**: `tu-usuario-docker`
 
 #### `DOCKER_PASSWORD`
-- **Valor**: Tu contraseña de Docker Hub (o mejor aún, un Access Token)
-- **Nota**: Para mayor seguridad, crea un Access Token en Docker Hub:
-  1. Ve a Docker Hub → Account Settings → Security
-  2. Crea un nuevo Access Token
-  3. Usa ese token como contraseña
+- **Valor**: Un Access Token de Docker Hub (NO uses tu contraseña real)
+- **Cómo obtenerlo**:
+  1. Ve a [Docker Hub](https://hub.docker.com/) → Account Settings → Security
+  2. Crea un nuevo Access Token con permisos "Read & Write"
+  3. Copia el token y úsalo como valor del secret
+
+> ⚠️ **Importante**: Los secrets se configuran en la interfaz web de GitHub, NO en el código.
 
 ## 🚀 Funcionamiento del Workflow
 
