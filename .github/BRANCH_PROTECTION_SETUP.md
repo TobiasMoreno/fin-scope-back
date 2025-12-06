@@ -1,6 +1,26 @@
 # Configuración de Branch Protection para Main
 
-## 🛡️ Configurar Branch Protection Rules en GitHub
+## 🛡️ Dos Métodos para Proteger Main
+
+GitHub ofrece dos formas de proteger ramas:
+1. **Rulesets** (nuevo, más flexible) - Recomendado
+2. **Branch Protection Rules** (clásico) - También funciona
+
+> 📖 **Guía detallada de Rulesets**: Ver [CONFIGURAR_RULESET.md](./CONFIGURAR_RULESET.md)
+
+## 🚀 Método 1: Rulesets (Recomendado)
+
+Si ya tienes un Ruleset creado pero está deshabilitado:
+
+1. Ve a **Settings** → **Rulesets** → Selecciona tu ruleset "main"
+2. **Habilitar**: Cambia "Enforcement status" de **"Disabled"** a **"Active"**
+3. **Agregar Target**: En "Target branches", haz clic en **"Add target"** → Escribe `main`
+4. **Agregar Reglas**: 
+   - Agrega la regla **"Require pull request before merging"**
+   - Configura: Require approvals: `1`
+5. **Guardar**: Haz clic en "Save changes"
+
+## 🛡️ Método 2: Branch Protection Rules (Clásico)
 
 Para **prevenir completamente** commits directos a `main` (antes del push), sigue estos pasos:
 
