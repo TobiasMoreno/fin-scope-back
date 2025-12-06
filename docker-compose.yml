@@ -15,7 +15,6 @@ services:
     env_file:
       - env
     environment:
-      # Configuración de la aplicación
       - SPRING_PROFILES_ACTIVE=prod
       - SERVER_PORT=8081
       
