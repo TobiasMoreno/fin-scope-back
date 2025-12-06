@@ -63,14 +63,6 @@
             <version>8.0.33</version>
             <scope>runtime</scope>
         </dependency>
-		<!-- PostgreSQL (comentado para usar MySQL) -->
-        <!--
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        -->
 		<!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -133,14 +125,6 @@
             <artifactId>google-cloud-storage</artifactId>
             <version>2.50.0</version>
         </dependency>
-
-        <!-- Firebase -->
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>9.2.0</version>
-        </dependency>
-
         <!-- OAuth 2.0 Client -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

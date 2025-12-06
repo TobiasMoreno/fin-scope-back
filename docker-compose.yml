@@ -3,9 +3,10 @@ version: '3.8'
 services:
   # Aplicación Spring Boot - PRODUCCIÓN
   app:
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    # Usa la imagen publicada en Docker Hub desde main
+    # Configura DOCKER_USERNAME en tu archivo .env o como variable de entorno
+    image: ${DOCKER_USERNAME:-tu-usuario-docker}/finscope-backend:latest
+    # Para usar una versión específica, cambia 'latest' por el tag de versión (ej: 1.0.5)
     container_name: finscope-app
     restart: unless-stopped
     depends_on:
