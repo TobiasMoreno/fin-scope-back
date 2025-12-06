@@ -41,5 +41,3 @@ Para **prevenir completamente** commits directos a `main` (antes del push), sigu
 2. Creas un PR → Se ejecutan tests ✅
 3. Mergeas el PR → Se ejecuta el workflow completo ✅
 4. Se genera versión y se publica Docker ✅
-
-
